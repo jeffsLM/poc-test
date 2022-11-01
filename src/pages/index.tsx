@@ -1,10 +1,16 @@
 import Link from 'next/link'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import pagarme from 'pagarme';
 
 
 
 export default function Home() {
+  const [cardNumber, setCardNumber] = useState('')
+  const [expirationDate, setExpirationDate] = useState('')
+  const [cvc, setCvc] = useState('')
+  const [holderName, setHolderName] = useState('')
+  const [hash, setHash] = useState('')
+  const [buttonText, setButtonText] = useState('gerar')
 
   // useEffect(() => {
   //   console.log('hashGerada', CCHashed(number, card_holder_name, card_expiration_date, cvc))
@@ -25,23 +31,42 @@ export default function Home() {
     return card_hash
   }
 
+  const handleCreateCard = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setButtonText('gerando...')
+    CCHashed(cardNumber, holderName, expirationDate, cvc).then(e => { setHash(e), setButtonText('gerar') })
+  }
+
   return (
     <div>
       Gerador de Hash
-      <form action="">
+      <form action="" onSubmit={handleCreateCard}>
+        <br />
         <label htmlFor="holderName">Holder Name</label>
-        <input type="text" name="holderName" placeholder="Holder Name" />
+        <br />
+        <input type="text" name="holderName" placeholder="Holder Name" value={holderName} onChange={(e) => setHolderName(e.target.value)} />
+        <br />
         <br />
         <label htmlFor="Cardnumber">Card Number</label>
-        <input type="text" name="Cardnumber" placeholder="Card Number" />
         <br />
-        <label htmlFor="Expiration">Expiration Date</label>
-        <input type="text" name="Expiration" placeholder="Expiration Date" />
+        <input type="text" name="Cardnumber" placeholder="Card Number" value={cardNumber} onChange={(e) => setCardNumber(e.target.value)} />
+        <br />
+        <br />
+        <label htmlFor="Expiration">Expiration Date without /</label>
+        <br />
+        <input type="text" name="Expiration" placeholder="Expiration Date" value={expirationDate} onChange={(e) => setExpirationDate(e.target.value)} />
+        <br />
         <br />
         <label htmlFor="cvc">cvc</label>
-        <input type="text" name="cvc" placeholder="cvc" />
-
+        <br />
+        <input type="text" name="cvc" placeholder="cvc" value={cvc} onChange={(e) => setCvc(e.target.value)} />
+        <br />
+        <br />
+        <button type="submit">{buttonText}</button>
       </form>
+      <br />
+      <br />
+      <code>{!!hash ? hash : 'aguardando geração do hash'}</code>
     </div>
   )
 }
