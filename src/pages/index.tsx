@@ -19,7 +19,7 @@ export default function Home() {
 
   const CCHashed = async (number, card_holder_name, card_expiration_date, cvc) => {
     let client = await pagarme.client.connect({
-      encryption_key: process.env.REACT_APP_ENCRYPTION_PAGARME,
+      encryption_key: 'ek_live_QQJk6NJnUEVYmVDiPNQvITzrWG8kcx'//process.env.REACT_APP_ENCRYPTION_PAGARME,
     });
     let card_hash = await client.security.encrypt({
       card_number: number,
@@ -66,7 +66,7 @@ export default function Home() {
       </form>
       <br />
       <br />
-      <code>{!!hash ? hash : 'aguardando geração do hash'}</code>
+      <code>{hash ? hash : 'aguardando geração do hash'}</code>
     </div>
   )
 }
